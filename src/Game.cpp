@@ -62,6 +62,55 @@ bool Game::init()
 
 	background.setTexture(background_texture);
 
+	character = new sf::Sprite();
+	passport = new sf::Sprite();
+
+	sf::Texture* animal_texture_1 = new sf::Texture();
+	if (!animal_texture_1->loadFromFile("../Data/Images/Critter Crossing Customs/penguin.png"))
+	{
+		std::cout << "Failed to load penguin.png" << std::endl;
+		return false;
+	}
+	sf::Texture* passport_texture_1 = new sf::Texture();
+	if (!passport_texture_1->loadFromFile("../Data/Images/Critter Crossing Customs/penguin passport.png"))
+	{
+		std::cout << "Failed to load penguin passport.png" << std::endl;
+		return false;
+	}
+
+	sf::Texture* animal_texture_2 = new sf::Texture();
+	if (!animal_texture_2->loadFromFile("../Data/Images/Critter Crossing Customs/elephant.png"))
+	{
+		std::cout << "Failed to load elephant.png" << std::endl;
+		return false;
+	}
+	sf::Texture* passport_texture_2 = new sf::Texture();
+	if (!passport_texture_2->loadFromFile("../Data/Images/Critter Crossing Customs/elephant passport.png"))
+	{
+		std::cout << "Failed to load elephant passport.png" << std::endl;
+		return false;
+	}
+
+	sf::Texture* animal_texture_3 = new sf::Texture();
+	if (!animal_texture_3->loadFromFile("../Data/Images/Critter Crossing Customs/giraffe.png"))
+	{
+		std::cout << "Failed to load giraffe.png" << std::endl;
+		return false;
+	}
+	sf::Texture* passport_texture_3 = new sf::Texture();
+	if (!passport_texture_3->loadFromFile("../Data/Images/Critter Crossing Customs/moose passport.png"))
+	{
+		std::cout << "Failed to load moose passport.png" << std::endl;
+		return false;
+	}
+	animals.push_back(animal_texture_1);
+	animals.push_back(animal_texture_2);
+	animals.push_back(animal_texture_3);
+
+	passports.push_back(passport_texture_1); 
+	passports.push_back(passport_texture_2); 
+	passports.push_back(passport_texture_3);
+
 	return true;
 }
 

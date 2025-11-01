@@ -24,6 +24,9 @@ public:
     };
 
 private:
+
+    Gamestate gamestate = IN_MENU;
+
     sf::RenderWindow& window;
     sf::Font font;
     sf::Text menu_text;
@@ -33,11 +36,17 @@ private:
     sf::Sprite background;
     sf::Texture background_texture;
 
-    Gamestate gamestate = IN_MENU;
+
+    sf::Sprite* character;
+    sf::Sprite* passport;
+
+    std::vector<sf::Texture*> animals;
+    std::vector<sf::Texture*> passports;
+
+    bool entry_permitted;
 
     int lives;
     sf::Text livesText;
 };
 
 #endif // PLATFORMER_GAME_H
-
