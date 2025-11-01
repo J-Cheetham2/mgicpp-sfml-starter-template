@@ -54,7 +54,7 @@ bool Game::init()
 	gameOver_text.setPosition(
 		window.getSize().x / 2 - gameOver_text.getGlobalBounds().width / 2, 50);
 
-	if (!background_texture.loadFromFile("..\Data\Images\kenney_physicspack\PNG\Backgrounds\colored_shroom.png"))
+	 if (!background_texture.loadFromFile("../Data/Images/kenney_physicspack/PNG/Backgrounds/colored_shroom.png"))
 	{
 		std::cout << "background texture did not load \n";
 		return false;
@@ -66,20 +66,21 @@ bool Game::init()
 	passport = new sf::Sprite();
 
 	sf::Texture* animal_texture_1 = new sf::Texture();
-	if (!animal_texture_1->loadFromFile("../Data/Images/Critter Crossing Customs/penguin.png"))
+
+	if (!animal_texture_1->loadFromFile("../Data/Images/kenney_physicspack/PNG/Other/penguin.png"))
 	{
 		std::cout << "Failed to load penguin.png" << std::endl;
 		return false;
 	}
 	sf::Texture* passport_texture_1 = new sf::Texture();
-	if (!passport_texture_1->loadFromFile("../Data/Images/Critter Crossing Customs/penguin passport.png"))
+	if (!passport_texture_1->loadFromFile("../Data/Images/penguin passport.png"))
 	{
 		std::cout << "Failed to load penguin passport.png" << std::endl;
 		return false;
 	}
 
 	sf::Texture* animal_texture_2 = new sf::Texture();
-	if (!animal_texture_2->loadFromFile("../Data/Images/Critter Crossing Customs/elephant.png"))
+	if (!animal_texture_2->loadFromFile("../Data/Images/elephant.png"))
 	{
 		std::cout << "Failed to load elephant.png" << std::endl;
 		return false;
@@ -111,6 +112,8 @@ bool Game::init()
 	passports.push_back(passport_texture_2); 
 	passports.push_back(passport_texture_3);
 
+	newAnimal();
+
 	return true;
 }
 
@@ -132,6 +135,8 @@ void Game::render()
 	else if (gamestate == IN_GAME)
 	{
 		window.draw(livesText);
+		window.draw(*character);
+		window.draw(*passport);
 	}
 	else if (gamestate == GAME_OVER)
 	{
@@ -144,9 +149,31 @@ void Game::render()
 void Game::mouseClicked(sf::Event event)
 {
 	//get the click position
-	sf::Vector2i click = sf::Mouse::getPosition(window);
+	sf::Vector2i click_position = sf::Mouse::getPosition(window);
+	sf::Vector2f click_position_f(
+		static_cast<float>(click_position.x),
+		static_cast<float>(click_position.y));
 
+	if (gamestate == IN_MENU || gamestate == GAME_OVER)
+	{
+		if (play_text.getGlobalBounds().contains(click_position_f))
+		{
+			gamestate = IN_GAME;
+			lives = 3;
+			livesText.setString("Lives: " + std::to_string(lives));
 
+			newAnimal();
+		}
+
+		else if (quit_text.getGlobalBounds().contains(click_position_f))
+		{
+			window.close();
+		}
+	}
+	else if (gamestate == IN_GAME)
+	{
+
+	}
 }
 
 void Game::keyPressed(sf::Event event)
@@ -157,6 +184,20 @@ void Game::keyPressed(sf::Event event)
 void Game::mouseButtonReleased(sf::Event event)
 {
 
+}
+
+void Game::newAnimal()
+{
+	int animal_index = rand() % animals.size();
+	int passport_index = rand() % passports.size();
+
+	entry_permitted = (animal_index == passport_index);
+
+	character->setTexture(*animals[animal_index], true);
+	passport->setTexture(*passports[passport_index], true);
+
+	character->setPosition(100, 300);
+	passport->setPosition(500, 300);
 }
 
 

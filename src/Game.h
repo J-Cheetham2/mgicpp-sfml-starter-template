@@ -16,6 +16,9 @@ public:
     void keyPressed(sf::Event event);
     void mouseButtonReleased(sf::Event event);
 
+private:
+    void newAnimal();
+
     enum Gamestate
     {
         IN_MENU,
