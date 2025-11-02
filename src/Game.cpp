@@ -119,7 +119,17 @@ bool Game::init()
 
 void Game::update(float dt)
 {
+	if (gamestate == IN_GAME)
+	{
+		if (dragged_sprite != nullptr)
+		{
+			sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
 
+			dragged_sprite->setPosition(
+				static_cast<float>(mouse_position.x) + drag_offset.x,
+				static_cast<float>(mouse_position.y) + drag_offset.y);
+		}
+	}
 }
 
 void Game::render()
@@ -172,7 +182,15 @@ void Game::mouseClicked(sf::Event event)
 	}
 	else if (gamestate == IN_GAME)
 	{
-
+		if (event.mouseButton.button == sf::Mouse::Left)
+		{
+			if (passport->getGlobalBounds().contains(click_position_f))
+			{
+				dragged_sprite = passport;
+				drag_offset.x = dragged_sprite->getPosition().x - click_position_f.x;
+				drag_offset.y = dragged_sprite->getPosition().y - click_position_f.y;
+			}
+		}
 	}
 }
 
@@ -183,7 +201,10 @@ void Game::keyPressed(sf::Event event)
 
 void Game::mouseButtonReleased(sf::Event event)
 {
-
+	if (event.mouseButton.button == sf::Mouse::Left)
+	{
+		dragged_sprite = nullptr;
+	}
 }
 
 void Game::newAnimal()

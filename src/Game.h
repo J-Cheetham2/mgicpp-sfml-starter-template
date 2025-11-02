@@ -19,6 +19,10 @@ public:
 private:
     void newAnimal();
 
+private:
+    sf::Sprite* dragged_sprite = nullptr;
+    sf::Vector2f drag_offset;
+
     enum Gamestate
     {
         IN_MENU,
