@@ -104,6 +104,32 @@ bool Game::init()
 		std::cout << "Failed to load moose passport.png" << std::endl;
 		return false;
 	}
+	if (!accept_button_texture.loadFromFile("../Data/Images/kenney_physicspack/PNG/Other/accept button.png"))
+	{
+		std::cout << "Failed to load accept button.png" << std::endl;
+		return false;
+	}
+	if (!reject_button_texture.loadFromFile("../Data/Images/kenney_physicspack/PNG/Other/reject button.png"))
+	{
+		std::cout << "Failed to load reject button.png" << std::endl;
+		return false;
+	}
+	if (!accept_stamp_texture.loadFromFile("../Data/Images/kenney_physicspack/PNG/Other/accept.png"))
+	{
+		std::cout << "Failed to load accept.png" << std::endl;
+		return false;
+	}
+	if (!reject_stamp_texture.loadFromFile("../Data/Images/kenney_physicspack/PNG/Other/reject.png"))
+	{
+		std::cout << "Failed to load reject.png" << std::endl;
+		return false;
+	}
+
+	accept_button = std::make_unique<sf::Sprite>(accept_button_texture);
+	reject_button = std::make_unique<sf::Sprite>(reject_button_texture);
+	accept_stamp = std::make_unique<sf::Sprite>(accept_stamp_texture);
+	reject_stamp = std::make_unique<sf::Sprite>(reject_stamp_texture);
+
 	animals.push_back(animal_texture_1);
 	animals.push_back(animal_texture_2);
 	animals.push_back(animal_texture_3);
@@ -129,6 +155,19 @@ void Game::update(float dt)
 				static_cast<float>(mouse_position.x) + drag_offset.x,
 				static_cast<float>(mouse_position.y) + drag_offset.y);
 		}
+		if (passport_stamped)
+		{
+			sf::Vector2f passport_position = passport->getPosition();
+
+			if (passport_accepted)
+			{
+				accept_stamp->setPosition(passport_position.x + 20, passport_position.y + 30);
+			}
+			else 
+			{
+				reject_stamp->setPosition(passport_position.x + 20, passport_position.y + 30);
+			}
+		}
 	}
 }
 
@@ -147,6 +186,20 @@ void Game::render()
 		window.draw(livesText);
 		window.draw(*character);
 		window.draw(*passport);
+		window.draw(*accept_button);
+		window.draw(*reject_button);
+
+		if (passport_stamped)
+		{
+			if (passport_accepted)
+			{
+				window.draw(*accept_stamp);
+			}
+			else
+			{
+				window.draw(*reject_stamp);
+			}
+		}
 	}
 	else if (gamestate == GAME_OVER)
 	{
@@ -191,6 +244,24 @@ void Game::mouseClicked(sf::Event event)
 				drag_offset.y = dragged_sprite->getPosition().y - click_position_f.y;
 			}
 		}
+		if (accept_button->getGlobalBounds().contains(click_position_f))
+		{
+			passport_stamped = true;
+			passport_accepted = true;
+		}
+		else if (reject_button->getGlobalBounds().contains(click_position_f))
+		{
+			passport_stamped = true;
+			passport_accepted = false;
+		}
+	}
+	else if (event.mouseButton.button == sf::Mouse::Right)
+	{
+		if (!passport_stamped)
+		{
+			accept_button->setPosition(click_position_f.x, click_position_f.y);
+			reject_button->setPosition(click_position_f.x, click_position_f.y + 50);
+		}
 	}
 }
 
@@ -203,6 +274,27 @@ void Game::mouseButtonReleased(sf::Event event)
 {
 	if (event.mouseButton.button == sf::Mouse::Left)
 	{
+		if (dragged_sprite == passport)
+		{
+			sf::Vector2f drop_position = passport->getPosition();
+
+			if (drop_position.x < 250 && drop_position.y < 250)
+			{
+				if (passport_stamped)
+				{
+					if (passport_accepted == entry_permitted)
+					{
+					}
+					else
+					{
+						lives--;
+						livesText.setString("Lives: " + std::to_string(lives));
+					}
+
+					newAnimal();
+				}
+			}
+		}
 		dragged_sprite = nullptr;
 	}
 }
@@ -219,6 +311,11 @@ void Game::newAnimal()
 
 	character->setPosition(100, 300);
 	passport->setPosition(500, 300);
+	accept_button->setPosition(-1000, -1000);
+	reject_button->setPosition(-1000, -1000);
+
+	passport_stamped = false;
+	passport_accepted = false;
 }
 
 

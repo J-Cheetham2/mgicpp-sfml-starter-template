@@ -3,6 +3,8 @@
 #define PLATFORMER_GAME_H
 
 #include <SFML/Graphics.hpp>
+#include <memory>
+#include <vector>
 
 class Game
 {
@@ -18,10 +20,6 @@ public:
 
 private:
     void newAnimal();
-
-private:
-    sf::Sprite* dragged_sprite = nullptr;
-    sf::Vector2f drag_offset;
 
     enum Gamestate
     {
@@ -42,15 +40,28 @@ private:
     sf::Text gameOver_text;
     sf::Sprite background;
     sf::Texture background_texture;
+    sf::Texture accept_button_texture;
+    sf::Texture reject_button_texture;
+    sf::Texture accept_stamp_texture;
+    sf::Texture reject_stamp_texture;
 
+    std::unique_ptr<sf::Sprite> accept_button;
+    std::unique_ptr<sf::Sprite> reject_button;
+    std::unique_ptr<sf::Sprite> accept_stamp;
+    std::unique_ptr<sf::Sprite> reject_stamp;
 
     sf::Sprite* character;
     sf::Sprite* passport;
+
+    sf::Sprite* dragged_sprite = nullptr;
+    sf::Vector2f drag_offset;
 
     std::vector<sf::Texture*> animals;
     std::vector<sf::Texture*> passports;
 
     bool entry_permitted;
+    bool passport_stamped = false;
+    bool passport_accepted = false;
 
     int lives;
     sf::Text livesText;
