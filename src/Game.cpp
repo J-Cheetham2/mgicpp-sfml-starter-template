@@ -9,7 +9,14 @@ Game::Game(sf::RenderWindow& game_window)
 
 Game::~Game()
 {
+	delete character;
+	delete passport;
 
+	for (int counter = 0; counter < animals.size(); ++counter)
+	{
+		delete animals[counter];
+		delete passports[counter];
+	}
 }
 
 bool Game::init()
@@ -199,6 +206,10 @@ void Game::render()
 			{
 				window.draw(*reject_stamp);
 			}
+		}
+		if (lives <= 0)
+		{
+			gamestate = GAME_OVER;
 		}
 	}
 	else if (gamestate == GAME_OVER)
