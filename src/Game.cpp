@@ -23,7 +23,11 @@ bool Game::init()
 {
 	font.loadFromFile("../Data/Fonts/OpenSans-Bold.ttf");
 
-	menu_text.setString("Welcome to Critters Crossing! Press the Play button to start, or the Quit button to exit.");
+	menu_text.setString("Welcome to Critters Crossing!\n\n"
+		"Right-Click to open Stamp Menu\n"
+		"Left-Click to Stamp\n"
+		"Drag Passport to animal to Return\n\n"
+		"Press Play to start.");
 	menu_text.setFillColor(sf::Color(150, 75, 0));
 	menu_text.setFont(font);
 	menu_text.setCharacterSize(25);
